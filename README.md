@@ -50,7 +50,7 @@ There are **two certificates**:
 | Certificate | How to get it |
 |-------------|---------------|
 | 🎓 **Certificate of Attendance** | Attend **at least 75%** of the classes |
-| 🎓 **Certificate with Grade** | Hand in the **final project** — it is graded |
+| 🎓 **Certificate with Grade** | Submit the **final project** on **Moodle** by **Saturday, 21 November 2026** — it is graded |
 
 ### The final project — AI Support Desk 🎧🤖
 
