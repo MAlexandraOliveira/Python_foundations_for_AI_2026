@@ -1,14 +1,14 @@
 <p align="center">
-  <img src="assets/pea_logo.png" alt="Porto Executive Academy" height="140">
+  <img src="pea_logo.png" alt="Porto Executive Academy" height="140">
   &nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="assets/falcon_logo.png" alt="FALC-ON" height="140">
+  <img src="falcon_logo.png" alt="FALC-ON" height="140">
 </p>
 
 # 🐍 Python Foundations for AI — 2026
 
 **Porto Executive Academy × FALC-ON** · Instructors: **Alexandra Oliveira** and **Catarina Santos**
 
-Welcome! This repository holds the materials for the course. **New content is added here as the classes go** — come back after each class to find its notebooks.
+Welcome! This repository holds the materials for the course. **New content is added here as the classes go:** each class's notebook and exercises are uploaded for that class, and the **exercise solutions are uploaded at the end of each class** — try the exercises first!
 
 ---
 
@@ -56,7 +56,7 @@ There are **two certificates**:
 
 A program that helps a support team with its tickets: it loads and cleans the tickets, stores them in a database, uses **Gemini** to classify each ticket and draft a reply, measures how good the AI is, and explains the results in charts and text — your notebook is written like a report.
 
-The full brief, with the requirements and the grading rubric, is in the **Class 10** folder. You build the project one piece per class, so it is ready by the end of the course.
+The full brief, with the requirements and the grading rubric, is in the [`final_project`](final_project) folder. You build the project one piece per class, so it is ready by the end of the course.
 
 > 📤 **Submit your project on Moodle by Saturday, 21 November 2026.**
 
@@ -72,6 +72,23 @@ The full brief, with the requirements and the grading rubric, is in the **Class 
 - [**Catarina**](https://www.linkedin.com/in/catarina-fs-santos)
 
 This course is offered by **Porto Executive Academy** in partnership with FALC-ON — and FALC-ON AI, the assistant you build in class, is named after it.
+
+---
+
+## 📁 What's in This Repository
+
+| Folder | What it holds |
+|--------|---------------|
+| `class-1/`, `class-2/`, … | One folder per class: the class notebook and the exercises notebook — and, at the end of the class, the exercise solutions |
+| [`dataset/`](dataset) | The data files used in the course (see below) |
+| [`final_project/`](final_project) | The final project brief: what to build, step by step, and how it is graded |
+
+### 📂 The `dataset` folder
+
+| File | What it is | Where it is used |
+|------|-----------|------------------|
+| `support_tickets.csv` | Customer-support tickets of a company that sells software and electronics: who asked, about which product, the type of request, its priority and status, and the customer's rating. It is **messy on purpose** — duplicates, missing values, text written in different ways, personal data — so you practise cleaning real-looking data. | Classes 3, 6 and 7 |
+| `store_tickets.csv` | Support tickets from an online store that sells furniture, kitchen, garden, lighting and decor products — each with the customer's own message and its real category. A different file, with its own problems to find and fix. | The final project |
 
 ---
 
