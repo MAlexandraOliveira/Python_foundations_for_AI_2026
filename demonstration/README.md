@@ -1,40 +1,21 @@
-# 🦅 FALC-ON AI — Course Assistant
+# 🦅 FALC-ON AI — Deploy It on Streamlit Community Cloud
 
-AI-powered chatbot for the **Python Foundations for AI** course  
-Porto Executive Academy × FALC-ON AI
+You need a **GitHub account** and a **Gemini API key** (see Class 9, *Step by step — get your free Gemini key*).
 
-Built with: Python · Streamlit · Google Gemini 2.5 Flash (free tier)
+1. **Copy the course repository to your GitHub account:** open <https://github.com/MAlexandraOliveira/Python_foundations_for_AI_2026> and click **Fork** → **Create fork**.
+2. Go to <https://share.streamlit.io> and click **Continue with GitHub** to sign in with your GitHub account.
+3. Click **Create app** → **Deploy a public app from GitHub**.
+4. Fill in:
+   - **Repository:** `your-username/Python_foundations_for_AI_2026`
+   - **Branch:** `main`
+   - **Main file path:** `demonstration/falcon_ai_app.py`
+5. Click **Advanced settings**:
+   - **Python version:** choose **3.11**.
+   - **Secrets:** paste this line, with your own key between the quotes:
+     ```toml
+     GEMINI_API_KEY = "your_key_here"
+     ```
+   - Click **Save**.
+6. Click **Deploy**. After a minute or two, your app opens at its own web address, ending in `.streamlit.app`.
 
-## Setup
-
-### 1. Install dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-### 2. Add your Gemini API key
-
-Get a free key at <https://aistudio.google.com> → “Get API Key”
-
-Either set it as an environment variable named `GEMINI_API_KEY`, or put it in `.streamlit/secrets.toml`:
-
-```toml
-GEMINI_API_KEY = "your_key_here"
-```
-
-### 3. Run
-
-```bash
-streamlit run falcon_ai_app.py
-```
-
-The app opens at <http://localhost:8501>
-
-## Files
-
-```
-falcon_ai_app.py          # main app
-requirements.txt          # dependencies
-.streamlit/secrets.toml   # API key (never commit this)
-```
+> ⚠️ Put your key **only** in the **Secrets** box — never in a file of the repository.
