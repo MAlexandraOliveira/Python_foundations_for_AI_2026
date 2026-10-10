@@ -390,11 +390,15 @@ def get_chat():
     """Create or retrieve the chat session from Streamlit session state."""
     if "chat" not in st.session_state:
         client = get_client()
-        # No temperature or token limit: newer Gemini models "think" before answering,
-        # and a small token limit can be used up by the thinking, leaving no answer.
+        # Newer Gemini models "think" before answering. Course questions need little thinking,
+        # so "low" gives faster answers (and fewer time-outs when Gemini is busy).
+        # No token limit: a small one can be used up by the thinking, leaving no answer.
         st.session_state.chat = client.chats.create(
             model=MODEL,
-            config=types.GenerateContentConfig(system_instruction=SYSTEM_PROMPT),
+            config=types.GenerateContentConfig(
+                system_instruction=SYSTEM_PROMPT,
+                thinking_config=types.ThinkingConfig(thinking_level="low"),
+            ),
         )
     return st.session_state.chat
 
