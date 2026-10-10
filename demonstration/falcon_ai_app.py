@@ -1,6 +1,6 @@
 # ─────────────────────────────────────────────────────────────────────────────
 # FALC-ON AI — Course Assistant
-# Streamlit + Gemini 2.5 Flash
+# Streamlit + Gemini 3.8 Flash
 #
 # Run:  streamlit run falcon_ai_app.py
 # Env:  GEMINI_API_KEY must be set in .streamlit/secrets.toml or as env var
@@ -340,7 +340,7 @@ def get_chat():
     if "chat" not in st.session_state:
         client = get_client()
         st.session_state.chat = client.chats.create(
-            model="gemini-2.5-flash",
+            model="gemini-3.8-flash",
             config=types.GenerateContentConfig(
                 system_instruction=SYSTEM_PROMPT,
                 temperature=0.35,
@@ -385,7 +385,7 @@ st.markdown("""
 
 st.markdown("""
 <div class="badge-row">
-    <span class="badge accent">Powered by Gemini 2.5 Flash</span>
+    <span class="badge accent">Powered by Gemini 3.8 Flash</span>
     <span class="badge">Built with Python + Streamlit</span>
     <span class="badge">Free tier</span>
 </div>
@@ -430,6 +430,6 @@ if prompt := st.chat_input("Ask me anything about the course..."):
 if st.session_state.messages:
     st.markdown(
         '<div class="falc-footer">FALC-ON AI · Porto Executive Academy · '
-        'Built with Python & Streamlit · Gemini 2.5 Flash</div>',
+        'Built with Python & Streamlit · Gemini 3.8 Flash</div>',
         unsafe_allow_html=True
     )
