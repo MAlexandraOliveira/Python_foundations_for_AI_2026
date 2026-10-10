@@ -7,6 +7,7 @@
 # ─────────────────────────────────────────────────────────────────────────────
 
 import base64
+import itertools
 import os
 import time
 from pathlib import Path
@@ -400,13 +401,16 @@ def get_chat():
 
 BUSY_CODES = (429, 500, 503, 504)    # "too many requests" / "busy": worth trying again
 
-def stream_answer(prompt, tries=4):
+def stream_answer(prompt, info, tries=4):
     """Yield the answer as Gemini writes it. If Gemini is busy before any text arrives,
-    wait (2, 4, then 8 seconds) and try again."""
+    wait (2, 4, then 8 seconds) and try again. `info` keeps why Gemini stopped."""
     for attempt in range(tries):
         got_text = False
         try:
             for chunk in get_chat().send_message_stream(prompt):
+                candidates = getattr(chunk, "candidates", None)
+                if candidates and candidates[0].finish_reason:
+                    info["finish_reason"] = str(candidates[0].finish_reason)
                 if chunk.text:
                     got_text = True
                     yield chunk.text
@@ -414,6 +418,7 @@ def stream_answer(prompt, tries=4):
         except errors.APIError as e:
             if got_text or e.code not in BUSY_CODES or attempt == tries - 1:
                 raise
+            print(f"Gemini busy ({e.code}), trying again - attempt {attempt + 2} of {tries}")
             time.sleep(2 * 2 ** attempt)
 
 
@@ -424,21 +429,35 @@ def answer_prompt(prompt):
         st.markdown(prompt)
 
     with st.chat_message("assistant", avatar=FALCON_LOGO):
+        info = {}
+        answer = ""
         try:
-            # Stream the answer, so the text appears as Gemini writes it
-            answer = st.write_stream(stream_answer(prompt))
+            words = stream_answer(prompt, info)
+            # Gemini thinks before it writes: show a spinner until the first words arrive
+            with st.spinner("FALC-ON AI is thinking…"):
+                first = next(words, "")
+            if first:
+                # then show the rest of the answer as Gemini writes it
+                answer = st.write_stream(itertools.chain([first], words))
         except errors.APIError as e:
+            print(f"Gemini error: {e}")                      # visible in Manage app → logs
             if e.code in BUSY_CODES:
                 answer = ("Gemini is very busy right now — many people are using it at the same time. "
                           "Please wait a minute and ask again.")
             else:
                 answer = f"I ran into a problem answering that. Please try again. *(Error: {e})*"
+            st.session_state.pop("chat", None)                # start a fresh conversation next time
             st.markdown(answer)
         except Exception as e:
+            print(f"Unexpected error: {e!r}")
             answer = f"I ran into a problem answering that. Please try again. *(Error: {e})*"
+            st.session_state.pop("chat", None)
             st.markdown(answer)
         if not answer:
-            answer = "Sorry, I could not write an answer this time. Please ask again."
+            reason = info.get("finish_reason", "no reason given")
+            print(f"Gemini returned no text - finish reason: {reason}")
+            answer = f"Sorry, Gemini returned an empty answer this time *(reason: {reason})*. Please ask again."
+            st.session_state.pop("chat", None)
             st.markdown(answer)
 
     st.session_state.messages.append({"role": "assistant", "content": answer})
