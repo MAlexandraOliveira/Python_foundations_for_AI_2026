@@ -6,16 +6,29 @@
 # Env:  GEMINI_API_KEY must be set in .streamlit/secrets.toml or as env var
 # ─────────────────────────────────────────────────────────────────────────────
 
+import base64
 import os
+from pathlib import Path
 
 import streamlit as st
 from google import genai
 from google.genai import types
 
+# ── Logos ─────────────────────────────────────────────────────────────────────
+HERE = Path(__file__).parent
+FALCON_LOGO = str(HERE / "falcon_logo.png")
+PEA_LOGO = str(HERE / "pea_logo.png")
+MODEL = "gemini-3.8-flash"
+
+def logo_html(path, alt):
+    """An <img> tag with the logo inside it, so it shows in st.markdown."""
+    data = base64.b64encode(Path(path).read_bytes()).decode()
+    return f'<img src="data:image/png;base64,{data}" alt="{alt}" class="falc-logo">'
+
 # ── Page config ───────────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="FALC-ON AI",
-    page_icon="🦅",
+    page_icon=FALCON_LOGO,
     layout="centered",
     initial_sidebar_state="collapsed",
 )
@@ -61,9 +74,17 @@ html, body, [data-testid="stAppViewContainer"] {
     border-bottom: 1px solid var(--steel);
     margin-bottom: 6px;
 }
-.falc-icon {
-    font-size: 2.6rem;
-    line-height: 1;
+.falc-logos {
+    display: flex;
+    gap: 8px;
+}
+.falc-logo {
+    height: 56px;
+    width: 56px;
+    object-fit: contain;
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 4px;
 }
 .falc-title {
     font-family: 'Space Grotesk', sans-serif;
@@ -124,6 +145,25 @@ html, body, [data-testid="stAppViewContainer"] {
 }
 
 /* Chat input */
+/* The bar behind the chat box (newer Streamlit versions) */
+[data-testid="stBottom"], [data-testid="stBottom"] > div,
+[data-testid="stBottomBlockContainer"], [data-testid="stChatInput"] {
+    background-color: var(--navy) !important;
+}
+/* Readable text in the chat (newer Streamlit versions) */
+[data-testid="stChatMessage"] p, [data-testid="stChatMessage"] li,
+[data-testid="stChatMessage"] em, [data-testid="stChatMessage"] strong,
+[data-testid="stChatInput"] textarea {
+    color: var(--text) !important;
+}
+[data-testid="stChatInput"] textarea::placeholder {
+    color: var(--muted) !important;
+}
+[data-testid="stChatInput"] > div {
+    background-color: var(--card) !important;
+    border: 1px solid var(--steel) !important;
+}
+
 [data-testid="stChatInput"] textarea {
     background: var(--card) !important;
     border: 1px solid var(--steel) !important;
@@ -196,6 +236,8 @@ html, body, [data-testid="stAppViewContainer"] {
 COURSE_KNOWLEDGE = """
 COURSE: Python Foundations for AI
 INSTITUTION: Porto Executive Academy (PEA) + FALC-ON AI
+COURSE MATERIALS: https://github.com/MAlexandraOliveira/Python_foundations_for_AI_2026 - each class's
+  notebook and exercises are added for that class; the exercise solutions are added at the end of the class
 INSTRUCTORS: Alexandra Oliveira and Catarina Santos, both AI Engineers
 TOTAL CLASSES: 10, of 3 hours each
 START DATE: 17 October 2026
@@ -233,7 +275,7 @@ CLASS FORMAT:
 
 PROGRAMME (10 classes):
 
-Class 1 — Python as the Language of AI
+Class 1 — Python as the Foundational Language of AI
   Google Colab; print() and comments; variables and data types; casting and input(); operators;
   f-strings; decisions (if/elif/else); loops (while, for, break, continue).
   Capstone: FALC-ON AI, a first AI pipeline with a rule-based stand-in model.
@@ -244,7 +286,7 @@ Class 2 — Data Structures for AI Systems
   Lists, sets and dictionaries; built-in functions and methods; JSON.
   Capstone: a conversation stored as a list of messages, the shape real AI models use.
 
-Class 3 — Data Analysis with pandas
+Class 3 — Data Analysis & Feature Preparation (pandas)
   Loading a CSV file; selecting and filtering; data quality (missing values, duplicates, messy text);
   removing personal data; new columns; summarising with groupby; saving to CSV and JSON.
   Capstone: preparing customer-support tickets as input for an AI assistant.
@@ -253,15 +295,15 @@ Class 4 — Functions as AI Pipelines
   Defining functions; parameters and return values; default arguments; docstrings.
   Capstone: FALC-ON AI rebuilt as a pipeline of small functions.
 
-Class 5 — Comprehensions and Functional Thinking
+Class 5 — Comprehensions & Functional Thinking
   List, dictionary and set comprehensions; sorting with a key and lambda; map, filter, zip, any, all.
   Capstone: preparing a batch of questions for an AI model, and reusing its answers.
 
-Class 6 — Data Visualisation for AI Insights
+Class 6 — Data Visualization for AI Insights
   matplotlib and seaborn: line, bar, histogram, scatter and box plots; a dashboard; saving charts.
   Capstone: an AI assistant dashboard, including how consistent a model's answers are.
 
-Class 7 — Databases
+Class 7 — Databases & Data Pipelines
   SQLite: creating tables, adding, reading, changing and deleting rows with SQL; pandas and SQL together.
   Capstone: FALC-ON AI gets a long-term memory of its conversations and ratings.
 
@@ -269,14 +311,16 @@ Class 8 — Object-Oriented Python for AI Systems
   Classes as templates; objects, attributes and methods; class variables; encapsulation; inheritance.
   Capstone: FALC-ON AI as two cooperating objects, an assistant and its memory.
 
-Class 9 — AI Libraries and APIs
-  The standard library; installing libraries and reproducibility; writing and importing your own
-  module; web APIs and real-time data; LLMs and their providers; calling Google Gemini, with the
-  API key kept secret.
+Class 9 — AI Libraries & APIs
+  The standard library (random, statistics); installing libraries and reproducibility; writing and
+  importing your own module; web APIs and real-time data (weather from Open-Meteo); LLMs and their
+  providers; getting a free Gemini API key in Google AI Studio and keeping it in Colab's Secrets panel;
+  calling Google Gemini from Python.
   Capstone: FALC-ON AI gets a real AI model (Gemini), grounded in the course facts.
 
 Class 10 — Final Project: the AI Support Desk
-  Students hand in an application that loads and cleans customer-support tickets, stores them in
+  Students hand in an application that loads and cleans customer-support tickets from an online
+  home-and-garden store (a different dataset from the one used in class), stores them in
   SQLite, uses Gemini to classify each ticket and draft a reply, measures how good the AI is
   (accuracy, consistency, human ratings), and shows the results in charts.
   It is delivered as Google Colab notebooks written as a report. There is no oral presentation.
@@ -298,7 +342,11 @@ TOOLS USED IN THE COURSE:
 - SQLite (Class 7)
 - Google Gemini API (Class 9 and the final project)
 - Git/GitHub and Streamlit: introduced in Class 10 with a live demo
-- All you need to start: a Google account"""
+- All you need to start: a Google account
+
+ABOUT FALC-ON:
+FALC-ON (AI · Learning · Development) is a project started by four people: Fabio, Alexandra, Luis and
+Catarina. The course assistant FALC-ON AI is named after it."""
 
 SYSTEM_PROMPT = f"""You are FALC-ON AI, the official AI assistant for the course "Python Foundations for AI",
 offered by Porto Executive Academy (PEA) in partnership with FALC-ON AI, and taught by Alexandra Oliveira
@@ -333,19 +381,18 @@ def get_client():
     if not api_key:
         st.error("⚠️ GEMINI_API_KEY not found. Add it to .streamlit/secrets.toml or set it as an env var.")
         st.stop()
-    return genai.Client(api_key=api_key)
+    # Give up after 90 seconds instead of waiting forever
+    return genai.Client(api_key=api_key, http_options=types.HttpOptions(timeout=90_000))
 
 def get_chat():
     """Create or retrieve the chat session from Streamlit session state."""
     if "chat" not in st.session_state:
         client = get_client()
+        # No temperature or token limit: newer Gemini models "think" before answering,
+        # and a small token limit can be used up by the thinking, leaving no answer.
         st.session_state.chat = client.chats.create(
-            model="gemini-3.8-flash",
-            config=types.GenerateContentConfig(
-                system_instruction=SYSTEM_PROMPT,
-                temperature=0.35,
-                max_output_tokens=600,
-            )
+            model=MODEL,
+            config=types.GenerateContentConfig(system_instruction=SYSTEM_PROMPT),
         )
     return st.session_state.chat
 
@@ -356,13 +403,17 @@ def answer_prompt(prompt):
     with st.chat_message("user", avatar="👤"):
         st.markdown(prompt)
 
-    with st.chat_message("assistant", avatar="🦅"):
-        with st.spinner(""):
-            try:
-                answer = get_chat().send_message(prompt).text
-            except Exception as e:
-                answer = f"I ran into a problem answering that. Please try again. *(Error: {e})*"
-        st.markdown(answer)
+    with st.chat_message("assistant", avatar=FALCON_LOGO):
+        try:
+            # Stream the answer, so the text appears as Gemini writes it
+            stream = get_chat().send_message_stream(prompt)
+            answer = st.write_stream(chunk.text for chunk in stream if chunk.text)
+        except Exception as e:
+            answer = f"I ran into a problem answering that. Please try again. *(Error: {e})*"
+            st.markdown(answer)
+        if not answer:
+            answer = "Sorry, I could not write an answer this time. Please ask again."
+            st.markdown(answer)
 
     st.session_state.messages.append({"role": "assistant", "content": answer})
 
@@ -375,13 +426,14 @@ if "pending_question" not in st.session_state:
 # ── Header ────────────────────────────────────────────────────────────────────
 st.markdown("""
 <div class="falc-header">
-    <div class="falc-icon">🦅</div>
+    <div class="falc-logos">{pea}{falcon}</div>
     <div>
         <p class="falc-title">FALC-ON <span>AI</span></p>
         <p class="falc-sub">Python Foundations for AI · Porto Executive Academy</p>
     </div>
 </div>
-""", unsafe_allow_html=True)
+""".format(pea=logo_html(PEA_LOGO, "Porto Executive Academy"), falcon=logo_html(FALCON_LOGO, "FALC-ON")),
+    unsafe_allow_html=True)
 
 st.markdown("""
 <div class="badge-row">
@@ -412,7 +464,7 @@ if not st.session_state.messages:
 
 # ── Chat history ──────────────────────────────────────────────────────────────
 for msg in st.session_state.messages:
-    with st.chat_message(msg["role"], avatar="🦅" if msg["role"] == "assistant" else "👤"):
+    with st.chat_message(msg["role"], avatar=FALCON_LOGO if msg["role"] == "assistant" else "👤"):
         st.markdown(msg["content"])
 
 # ── Handle pending question from suggestion buttons ───────────────────────────

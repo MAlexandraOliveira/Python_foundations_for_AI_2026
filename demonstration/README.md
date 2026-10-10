@@ -10,7 +10,7 @@ You need a **GitHub account** and a **Gemini API key** (see Class 9, *Step by st
    - **Branch:** `main`
    - **Main file path:** `demonstration/falcon_ai_app.py`
 5. Click **Advanced settings**:
-   - **Python version:** choose **3.11**.
+   - **Python version:** choose **3.12**.
    - **Secrets:** paste this line, with your own key between the quotes:
      ```toml
      GEMINI_API_KEY = "your_key_here"
