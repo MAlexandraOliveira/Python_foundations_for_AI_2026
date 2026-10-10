@@ -94,7 +94,7 @@ This course is offered by **Porto Executive Academy** in partnership with FALC-O
 
 ## 🚀 How to Use This Repository
 
-1. **Open a notebook in Colab:** in [Google Colab](https://colab.research.google.com), choose *File → Open notebook → GitHub*, paste this repository's address, and pick the notebook.
+1. **Open a notebook in Colab:** in [Google Colab](https://colab.research.google.com), choose *File → Open notebook → GitHub*, paste this repository's address — `https://github.com/MAlexandraOliveira/Python_foundations_for_AI_2026` — and pick the notebook.
 2. **Save your own copy** — *File → Save a copy in Drive* — so your changes are kept.
 3. **Data files** (`.csv`): download them from GitHub and upload them to the Colab files panel 📁 on the left.
 
