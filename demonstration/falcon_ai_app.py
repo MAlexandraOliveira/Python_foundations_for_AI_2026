@@ -8,11 +8,12 @@
 
 import base64
 import os
+import time
 from pathlib import Path
 
 import streamlit as st
 from google import genai
-from google.genai import types
+from google.genai import errors, types
 
 # ── Logos ─────────────────────────────────────────────────────────────────────
 HERE = Path(__file__).parent
@@ -397,6 +398,25 @@ def get_chat():
     return st.session_state.chat
 
 
+BUSY_CODES = (429, 500, 503, 504)    # "too many requests" / "busy": worth trying again
+
+def stream_answer(prompt, tries=4):
+    """Yield the answer as Gemini writes it. If Gemini is busy before any text arrives,
+    wait (2, 4, then 8 seconds) and try again."""
+    for attempt in range(tries):
+        got_text = False
+        try:
+            for chunk in get_chat().send_message_stream(prompt):
+                if chunk.text:
+                    got_text = True
+                    yield chunk.text
+            return
+        except errors.APIError as e:
+            if got_text or e.code not in BUSY_CODES or attempt == tries - 1:
+                raise
+            time.sleep(2 * 2 ** attempt)
+
+
 def answer_prompt(prompt):
     """Show the user's message, get the assistant's reply, and store both."""
     st.session_state.messages.append({"role": "user", "content": prompt})
@@ -406,8 +426,14 @@ def answer_prompt(prompt):
     with st.chat_message("assistant", avatar=FALCON_LOGO):
         try:
             # Stream the answer, so the text appears as Gemini writes it
-            stream = get_chat().send_message_stream(prompt)
-            answer = st.write_stream(chunk.text for chunk in stream if chunk.text)
+            answer = st.write_stream(stream_answer(prompt))
+        except errors.APIError as e:
+            if e.code in BUSY_CODES:
+                answer = ("Gemini is very busy right now — many people are using it at the same time. "
+                          "Please wait a minute and ask again.")
+            else:
+                answer = f"I ran into a problem answering that. Please try again. *(Error: {e})*"
+            st.markdown(answer)
         except Exception as e:
             answer = f"I ran into a problem answering that. Please try again. *(Error: {e})*"
             st.markdown(answer)
