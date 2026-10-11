@@ -82,7 +82,6 @@ This course is offered by **Porto Executive Academy** in partnership with FALC-O
 | `class-1/`, `class-2/`, … | One folder per class: the class notebook and the exercises notebook — and, at the end of the class, the exercise solutions |
 | [`dataset/`](dataset) | The data files used in the course (see below) |
 | [`final_project/`](final_project) | The final project brief: what to build, step by step, and how it is graded |
-| [`demonstration/`](demonstration) | The **FALC-ON AI web app**, built with Streamlit and Gemini — the live demo of Class 10. Optional: a taste of what Python can do next, not part of the course work |
 
 ### 📂 The `dataset` folder
 
