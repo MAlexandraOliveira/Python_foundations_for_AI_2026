@@ -8,6 +8,8 @@
 
 **Porto Executive Academy × FALC-ON** · Instructors: **Alexandra Oliveira** and **Catarina Santos**
 
+📧 Contact: [maro@iscap.ipp.pt](mailto:maro@iscap.ipp.pt)
+
 Welcome! This repository holds the materials for the course. **New content is added here as the classes go:** each class's notebook and exercises are uploaded for that class, and the **exercise solutions are uploaded at the end of each class** — try the exercises first!
 
 ---
